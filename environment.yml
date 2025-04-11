@@ -1,4 +1,4 @@
-name: stactools-ephemeral
+name: stactools-hfrnet
 channels:
   - conda-forge
   - defaults

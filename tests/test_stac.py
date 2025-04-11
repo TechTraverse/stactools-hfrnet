@@ -1,4 +1,4 @@
-from stactools.ephemeral import stac
+from stactools.hfrnet import stac
 
 from . import test_data
 
