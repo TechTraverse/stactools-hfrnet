@@ -1,10 +1,16 @@
 [project]
 name = "stactools-hfrnet"
 version = "0.1.0"
-description = "PROVIDE DESCRIPTION HERE"
+description = "stactools implementation for High Frequency Radar Network data"
 readme = "README.md"
-authors = [{ name = "Your name here", email = "your-email@example.com" }]
-maintainers = [{ name = "Your name here", email = "your-email@example.com" }]
+authors = [
+    { name = "Evan McQuinn", email = "evan.mcquinn@techtraverse.io" },
+    { name = "Kendall Aubertot", email = "kendall.aubertot@techtraverse.io" }
+]
+maintainers = [
+    { name = "Evan McQuinn", email = "evan.mcquinn@techtraverse.io" },
+    { name = "Kendall Aubertot", email = "kendall.aubertot@techtraverse.io" }
+]
 keywords = ["stactools", "pystac", "catalog", "STAC"]
 license = { text = "Apache-2.0" }
 classifiers = [
@@ -19,7 +25,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 requires-python = ">=3.9"
-dependencies = ["stactools>=0.4.0"]
+dependencies = [
+    "netcdf4>=1.7.2",
+    "stactools>=0.4.0",
+]
 
 [dependency-groups]
 dev = [
@@ -30,6 +39,7 @@ dev = [
     "pytest~=8.2",
     "requests~=2.32",
     "ruff==0.8.3",
+    "ipykernel>=6.29.5",
 ]
 docs = ["pystac~=1.10", "ipykernel~=6.29", "jinja2~=3.1"]
 
