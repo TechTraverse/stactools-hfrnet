@@ -30,11 +30,39 @@ def create_collection() -> Collection:
     )
 
     collection = Collection(
-        id="example-collection",
-        title="Example collection",
-        description="An example collection",
+        id="hfrnet-collection",
+        title="Near-Real Time Surface Ocean Velocity, U.S. West Coast, 500m Resolution",
+        description="""
+            Surface ocean velocities estimated from HF-Radar are representative 
+            of the upper 0.3 meters of the ocean.  The main objective of 
+            near-real time processing is to produce the best product from 
+            available data at the time of processing.  Radial velocity 
+            measurements are obtained from individual radar sites through the 
+            U.S. HF-Radar Network. Hourly radial data are processed by unweighted 
+            least squares on a 500m resolution grid of the U.S. West Coast to 
+            produce near real-time surface current maps.
+            instrument: Earth Remote Sensing Instruments, Active Remote Sensing, 
+            Profilers/Sounders, Radar Sounders, Doppler RADAR
+        """,
         extent=extent,
-        extra_fields={"custom_attribute": "foo"},
+        extra_fields={
+            "keywords": [
+                "Earth Science",
+                "Oceans",
+                "Coastal Processes",
+                "Marine Environment Monitoring",
+                "Ocean Circulation",
+                "Ocean Currents",
+                "Surface Currents",
+                "Wind-Driven Circulation",
+                "Tides",
+                "Tidal Currents",
+            ],
+            "processing_level": (
+                "Near real-time dataset with automated data acquisition and "
+                "processing quality control",
+            ),
+        },
     )
     return collection
 
