@@ -103,7 +103,7 @@ Dimension = (
 
 
 class VariableObject(BaseModel):
-    dimensions: list[Dimension]
+    dimensions: list[str]
     type: str
     description: str
     extent: list[int | str | None]
@@ -142,36 +142,20 @@ def create_item(asset_href: str) -> Item:
     max_epoch_seconds: int = int(ds["time"].max().item() / 1_000_000_000)
 
     item.properties["cube:dimensions"] = {
-        "time": VariableObject(
-            dimensions=[
-                TemporalDimension(
-                    type="temporal",
-                    description="",
-                    extent=None,
-                    values=["1"],
-                    step=None,
-                )
-            ],
-            type="data",
-            description="seconds since 1970-01-01",
-            extent=[min_epoch_seconds, max_epoch_seconds],
+        "time": TemporalDimension(
+            type="temporal",
+            description="",
+            extent=None,
             values=[],
-            unit="second",
+            step=None,
         ),
         # "lat": VariableObject(dimensions=[], type="data"),
         # "lon",
     }
     item.properties["cube:variables"] = {
         "time": VariableObject(
-            dimensions=[
-                TemporalDimension(
-                    type="temporal",
-                    description="",
-                    extent=None,
-                    values=["1"],
-                    step=None,
-                )
-            ],
+            dimensions=["time"],
+            # TODO: validate. It's not auxiliary because it is in cub:dimensions?
             type="data",
             description="seconds since 1970-01-01",
             extent=[min_epoch_seconds, max_epoch_seconds],
