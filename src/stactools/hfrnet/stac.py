@@ -1,5 +1,7 @@
 from datetime import datetime, timezone
 
+import xarray
+from pydantic import BaseModel
 from pystac import (
     Collection,
     Extent,
@@ -67,6 +69,48 @@ def create_collection() -> Collection:
     return collection
 
 
+class HorizontalSpatialDimension(BaseModel):
+    pass
+
+
+class VerticalSpatialDimension(BaseModel):
+    pass
+
+
+class TemporalDimension(BaseModel):
+    type: str
+    description: str
+    extent: str | None
+    values: list[str]
+    step: str | None
+
+
+class SpatialVectorDimension(BaseModel):
+    pass
+
+
+class AdditionalDimension(BaseModel):
+    pass
+
+
+Dimension = (
+    HorizontalSpatialDimension
+    | VerticalSpatialDimension
+    | TemporalDimension
+    | SpatialVectorDimension
+    | AdditionalDimension
+)
+
+
+class VariableObject(BaseModel):
+    dimensions: list[Dimension]
+    type: str
+    description: str
+    extent: list[int | str | None]
+    values: list[int | str]
+    unit: str
+
+
 def create_item(asset_href: str) -> Item:
     """Creates a STAC item from a raster asset.
 
@@ -91,6 +135,65 @@ def create_item(asset_href: str) -> Item:
         Item: STAC Item object
     """
     item = stactools.core.create.item(asset_href)
-    item.id = "example-item"
+    item.id = asset_href  # FIXME: revisit - better to not have slashes
+
+    ds: xarray.Dataset = xarray.Dataset()
+    min_epoch_seconds: int = int(ds["time"].min().item() / 1_000_000_000)
+    max_epoch_seconds: int = int(ds["time"].max().item() / 1_000_000_000)
+
+    item.properties["cube:dimensions"] = {
+        "time": VariableObject(
+            dimensions=[
+                TemporalDimension(
+                    type="temporal",
+                    description="",
+                    extent=None,
+                    values=["1"],
+                    step=None,
+                )
+            ],
+            type="data",
+            description="seconds since 1970-01-01",
+            extent=[min_epoch_seconds, max_epoch_seconds],
+            values=[],
+            unit="second",
+        ),
+        # "lat": VariableObject(dimensions=[], type="data"),
+        # "lon",
+    }
+    item.properties["cube:variables"] = {
+        "time": VariableObject(
+            dimensions=[
+                TemporalDimension(
+                    type="temporal",
+                    description="",
+                    extent=None,
+                    values=["1"],
+                    step=None,
+                )
+            ],
+            type="data",
+            description="seconds since 1970-01-01",
+            extent=[min_epoch_seconds, max_epoch_seconds],
+            values=[],
+            unit="second",
+        ),
+        # "lat": VariableObject(dimensions=[], type="data"),
+        # "lon",
+        # "time_bnds",
+        # "depth",
+        # "depth_bnds",
+        # "wgs84",
+        # "u_mean",
+        # "v_mean",
+        # "u_var",
+        # "v_var",
+        # "u_min",
+        # "v_min",
+        # "u_max",
+        # "v_max",
+        # "n_obs",
+        # "processing_parameters",
+    }
     item.properties["custom_attribute"] = "foo"
     return item
